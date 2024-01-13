@@ -1,0 +1,63 @@
+﻿@page "{Category:int?}"
+@model DotNetLab12.Pages.Shops.ShopModel
+
+@{
+    ViewData["Title"] = "Shop";
+}
+
+<h1>Shop</h1>
+
+@using (Html.BeginForm("OnGetAsync", "Shop", FormMethod.Get))
+{
+    <fieldset>
+        Category
+        @Html.DropDownList("Category")
+
+        <p>
+            <input type="submit" value="Submit" />
+        </p>
+
+    </fieldset>
+}
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Article[0].PictureName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Article) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.CategoryId)
+            </td>
+            <td>
+                <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
+            </td>
+          
+        </tr>
+}
+    </tbody>
+</table>
