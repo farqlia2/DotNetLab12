@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using System.ComponentModel.DataAnnotations;
 
 namespace DotNetLab12.Pages.Articles
 {
@@ -36,6 +37,9 @@ namespace DotNetLab12.Pages.Articles
         [BindProperty]
         public ArticleViewModel ArticleViewModel { get; set; }
 
+        [BindProperty, Display(Name = "Product Image")]
+        public IFormFile ProductImage { get; set; }
+
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
@@ -44,7 +48,7 @@ namespace DotNetLab12.Pages.Articles
             {
                 return Page();
             }
-
+            ArticleViewModel.Picture = ProductImage;
             string? fileName = saveFile(ArticleViewModel.Picture);
             Article article = new Article()
             {
@@ -60,6 +64,8 @@ namespace DotNetLab12.Pages.Articles
 
             return RedirectToPage("./Index");
         }
+
+      
 
         private string? saveFile(IFormFile? formFile)
         {
