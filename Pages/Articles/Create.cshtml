@@ -14,24 +14,25 @@
         <form method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ArticleViewModel.Name" class="control-label"></label>
-                <input asp-for="ArticleViewModel.Name" class="form-control" />
-                <span asp-validation-for="ArticleViewModel.Name" class="text-danger"></span>
+                <label asp-for="Article.Name" class="control-label"></label>
+                <input asp-for="Article.Name" class="form-control" />
+                <span asp-validation-for="Article.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArticleViewModel.Price" class="control-label"></label>
-                <input asp-for="ArticleViewModel.Price" class="form-control" />
-                <span asp-validation-for="ArticleViewModel.Price" class="text-danger"></span>
+                <label asp-for="Article.Price" class="control-label"></label>
+                <input asp-for="Article.Price" class="form-control" />
+                <span asp-validation-for="Article.Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ArticleViewModel.CategoryId" class="control-label"></label>
-                <select asp-for="ArticleViewModel.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+                <label asp-for="Article.Category.Name" class="control-label"></label>
+                <select asp-for="Article.CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="ProductImage" class="control-label"></label>
-                <input asp-for="ProductImage" class="form-control" accept=".jpg, .png" />
-                
+                <input asp-for="ProductImage" class="form-control" accept=".jpg, .png" onchange="previewFile(event)" />
+            <img id="preview" />
             </div>
+            
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

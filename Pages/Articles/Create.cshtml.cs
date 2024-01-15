@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DotNetLab12.Data;
 using DotNetLab12.Models;
-using DotNetLab12.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using System.IO;
@@ -35,7 +34,7 @@ namespace DotNetLab12.Pages.Articles
         }
 
         [BindProperty]
-        public ArticleViewModel ArticleViewModel { get; set; }
+        public Article Article { get; set; }
 
         [BindProperty, Display(Name = "Product Image")]
         public IFormFile ProductImage { get; set; }
@@ -48,18 +47,9 @@ namespace DotNetLab12.Pages.Articles
             {
                 return Page();
             }
-            ArticleViewModel.Picture = ProductImage;
-            string? fileName = saveFile(ArticleViewModel.Picture);
-            Article article = new Article()
-            {
-                ArticleId = ArticleViewModel.ArticleId,
-                Name = ArticleViewModel.Name,
-                Price = ArticleViewModel.Price,
-                PictureName = fileName,
-                CategoryId = ArticleViewModel.CategoryId
-            };
-
-            _context.Article.Add(article);
+            
+            saveFile();
+            _context.Article.Add(Article);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
@@ -67,20 +57,19 @@ namespace DotNetLab12.Pages.Articles
 
       
 
-        private string? saveFile(IFormFile? formFile)
+        private void saveFile()
         {
-            if (formFile != null)
+            if (ProductImage != null)
             {
-                string name = DateTime.Now.ToString("ddMMyyyyhhmmss") + formFile.FileName;
+                string name = DateTime.Now.ToString("ddMMyyyyhhmmss") + ProductImage.FileName;
                 string uploadPath = Path.Combine(_hostEnvironment.WebRootPath, "upload", name);
 
                 using (FileStream fs = System.IO.File.Create(uploadPath))
                 {
-                    formFile.CopyTo(fs);
+                    ProductImage.CopyTo(fs);
+                    Article.PictureName = name;
                 }
-                return name;
             }
-            return null;
         }
 
     }

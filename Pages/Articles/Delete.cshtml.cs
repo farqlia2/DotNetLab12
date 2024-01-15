@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using DotNetLab12.Data;
 using DotNetLab12.Models;
-using DotNetLab12.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 
