@@ -7,18 +7,20 @@
 
 <h1>Shop</h1>
 
-@using (Html.BeginForm("OnGetAsync", "Shop", FormMethod.Get))
-{
+
+<form method="get">
     <fieldset>
         Category
         @Html.DropDownList("Category")
 
         <p>
-            <input type="submit" value="Submit" />
+            <input type="submit" value="Show" />
         </p>
 
     </fieldset>
-}
+</form>
+    
+
 
 <p>
     <a asp-page="Create">Create New</a>
@@ -55,6 +57,12 @@
             </td>
             <td>
                 <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
+            </td>
+
+            <td>
+                <form asp-page-handler="AddToBasket" asp-route-id="@item.ArticleId" method="post">
+                    <button class="btn btn-default">+</button>
+                </form>
             </td>
           
         </tr>

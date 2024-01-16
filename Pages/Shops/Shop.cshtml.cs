@@ -9,6 +9,8 @@ using DotNetLab12.Data;
 using DotNetLab12.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace DotNetLab12.Pages.Shops
 {
@@ -50,11 +52,11 @@ namespace DotNetLab12.Pages.Shops
         public async Task OnGetAsync(string? Category)
         {
             Category = Category == null ? "-1" : Category;
-           
+
             ViewData["Category"] = getCategories(Category);
 
             Article = await _context.Article
-                     .Include(a => a.Category).ToListAsync();
+                 .Include(a => a.Category).ToListAsync();
 
             foreach (var art in Article)
             {
@@ -65,5 +67,33 @@ namespace DotNetLab12.Pages.Shops
                 Article = Article.Where(a => a.CategoryId.ToString() == Category).ToList();
             }
         }
+
+        public void SetOrUpdateArticleCookie(int articleId, int addValue = 1, int numberOfDays = 7)
+        {
+
+            string artId = articleId.ToString();
+            int newValue = addValue;
+            if (Request.Cookies.ContainsKey(artId))
+            {
+                newValue += int.Parse(Request.Cookies[artId]);
+                Response.Cookies.Delete(artId);
+            }
+
+            if (newValue > 0)
+            {
+                CookieOptions option = new CookieOptions();
+                option.Expires = DateTime.Now.AddDays(numberOfDays);
+                Response.Cookies.Append(artId, newValue.ToString(), option);
+            }
+
+        }
+
+        public IActionResult OnPostAddToBasket(int id)
+        {
+            SetOrUpdateArticleCookie(id);
+            return RedirectToPage();
+        }
+
+        
     }
 }

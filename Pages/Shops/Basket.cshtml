@@ -1,0 +1,69 @@
+﻿@page
+@model DotNetLab12.Pages.Shops.BasketModel
+@{
+    ViewData["Title"] = "Basket";
+}
+
+<p>
+    <a asp-action="Summary">Submit Basket</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BasketItems[0].Article.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BasketItems[0].Article.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BasketItems[0].Article.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BasketItems[0].Count)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BasketItems[0].Article.PictureName)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.BasketItems)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Article.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Article.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Article.Category.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Count)
+                </td>
+                <td>
+                    <img src="~/upload/@Url.Content(item.Article.PictureName)" alt="Image" style="height:50px;width:50px;" />
+                </td>
+                <td>
+                    <form asp-page-handler="AddToBasket" asp-route-id="@item.ArticleId" method="post">
+                        <button class="btn btn-default">+</button>
+                    </form>
+                </td>
+                <td>
+                    <form asp-page-handler="RemoveFromBasket" asp-route-id="@item.ArticleId" method="post">
+                        <button class="btn btn-default">-</button>
+                    </form>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+
+    <caption>Total = @ViewData["summary"]</caption>
+
+</table>
