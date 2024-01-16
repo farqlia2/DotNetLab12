@@ -1,21 +1,21 @@
 using DotNetLab12.Data;
 using DotNetLab12.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotNetLab12.Pages.Shops
 {
-    public class BasketModel : PageModel
+    public class SummaryModel : PageModel
     {
         private readonly ShopDbContext _context;
         private string DEFAULT_IMAGE = "default_image.jpg";
 
-        public BasketModel(ShopDbContext context) {
+        public SummaryModel(ShopDbContext context)
+        {
             _context = context;
         }
 
@@ -30,11 +30,6 @@ namespace DotNetLab12.Pages.Shops
                 return RedirectToPage("EmptyBasket");
             }
             return Page();
-        }
-
-        public IActionResult OnPostSubmit()
-        {
-            return RedirectToPage("Summary");
         }
 
         public async Task<List<BasketItem>> getBasketItems()
@@ -65,40 +60,5 @@ namespace DotNetLab12.Pages.Shops
 
             return basketItems;
         }
-
-        public void SetOrUpdateArticleCookie(int articleId, int addValue = 1, int numberOfDays = 7)
-        {
-
-            string artId = articleId.ToString();
-            int newValue = addValue;
-            if (Request.Cookies.ContainsKey(artId))
-            {
-                newValue += int.Parse(Request.Cookies[artId]);
-                Response.Cookies.Delete(artId);
-            }
-
-            if (newValue > 0)
-            {
-                CookieOptions option = new CookieOptions();
-                option.Expires = DateTime.Now.AddDays(numberOfDays);
-                Response.Cookies.Append(artId, newValue.ToString(), option);
-            }
-
-        }
-
-        public IActionResult OnPostAddToBasket(int id)
-        {
-            SetOrUpdateArticleCookie(id);
-            return RedirectToPage("Basket");
-        }
-
-        public IActionResult OnPostRemoveFromBasket(int id)
-        {
-            SetOrUpdateArticleCookie(id, addValue: -1);
-            return RedirectToPage("Basket");
-        }
-
-
     }
-
 }

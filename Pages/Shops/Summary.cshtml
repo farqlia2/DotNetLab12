@@ -1,14 +1,10 @@
 ﻿@page
-@model DotNetLab12.Pages.Shops.BasketModel
+@model DotNetLab12.Pages.Shops.SummaryModel
 @{
     ViewData["Title"] = "Basket";
 }
 
-<p>
-    <form asp-page-handler="Submit" method="post">
-        <button class="btn btn-default">Save</button>
-    </form>
-</p>
+<h1>Basket Summary</h1>
 
 <table class="table">
     <thead>
@@ -50,16 +46,6 @@
                 </td>
                 <td>
                     <img src="~/upload/@Url.Content(item.Article.PictureName)" alt="Image" style="height:50px;width:50px;" />
-                </td>
-                <td>
-                    <form asp-page-handler="AddToBasket" asp-route-id="@item.ArticleId" method="post">
-                        <button class="btn btn-default">+</button>
-                    </form>
-                </td>
-                <td>
-                    <form asp-page-handler="RemoveFromBasket" asp-route-id="@item.ArticleId" method="post">
-                        <button class="btn btn-default">-</button>
-                    </form>
                 </td>
 
             </tr>
