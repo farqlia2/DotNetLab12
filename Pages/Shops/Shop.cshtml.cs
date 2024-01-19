@@ -11,9 +11,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ActionConstraints;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Shops
 {
+    [Authorize(Policy = "DisableAdminRole")]
     public class ShopModel : PageModel
     {
         private readonly DotNetLab12.Data.ShopDbContext _context;
@@ -51,6 +53,7 @@ namespace DotNetLab12.Pages.Shops
 
         public async Task OnGetAsync(string? Category)
         {
+            ClearCookies();
             Category = Category == null ? "-1" : Category;
 
             ViewData["Category"] = getCategories(Category);
@@ -65,6 +68,18 @@ namespace DotNetLab12.Pages.Shops
             if (Category != "-1")
             {
                 Article = Article.Where(a => a.CategoryId.ToString() == Category).ToList();
+            }
+        }
+
+        public void ClearCookies()
+        {
+            foreach (var cookie in Request.Cookies)
+            {
+                int value;
+                if (cookie.Value == "0" || (Int32.TryParse(cookie.Key, out value) && !_context.Article.Any(a => a.ArticleId == value)))
+                {
+                    Response.Cookies.Delete(cookie.Key);
+                }
             }
         }
 

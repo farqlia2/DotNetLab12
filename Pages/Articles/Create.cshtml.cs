@@ -12,9 +12,11 @@ using Microsoft.Extensions.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Articles
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly DotNetLab12.Data.ShopDbContext _context;

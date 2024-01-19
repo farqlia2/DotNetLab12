@@ -1,14 +1,23 @@
 ﻿@page
 @model DotNetLab12.Pages.Shops.BasketModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
 @{
     ViewData["Title"] = "Basket";
 }
 
-<p>
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
     <form asp-page-handler="Submit" method="post">
         <button class="btn btn-default">Save</button>
     </form>
-</p>
+    </p>
+} else
+{
+    <p>Sign In to Order!</p>
+}
+
 
 <table class="table">
     <thead>

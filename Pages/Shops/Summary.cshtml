@@ -1,5 +1,6 @@
 ﻿@page
 @model DotNetLab12.Pages.Shops.SummaryModel
+@using DotNetLab12.Models
 @{
     ViewData["Title"] = "Basket";
 }
@@ -50,6 +51,32 @@
 
             </tr>
         }
+        <div>
+            <form method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label asp-for="Name">Name:</label>
+                    <input type="text" asp-for="Name" required />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Address">Address:</label>
+                    <textarea asp-for="Address" rows="4" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PaymentMethod">Payment Method:</label>
+                    <select id="PaymentMethod" name="PaymentMethod" asp-for="PaymentMethod" required>
+                        @foreach (var paymentMethod in Enum.GetValues(typeof(PaymentMethod)))
+                        {
+                            <option value="@paymentMethod">@paymentMethod</option>
+                        }
+                    </select>
+                </div>
+
+                <button type="submit">Order</button>
+            </form>
+        </div>
+        
     </tbody>
 
     <caption>Total = @ViewData["summary"]</caption>

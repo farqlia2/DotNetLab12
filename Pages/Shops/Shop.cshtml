@@ -21,10 +21,6 @@
 </form>
     
 
-
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -59,11 +55,14 @@
                 <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
             </td>
 
-            <td>
+            @if (!User.IsInRole("Admin"))
+            {
+                <td>
                 <form asp-page-handler="AddToBasket" asp-route-id="@item.ArticleId" method="post">
                     <button class="btn btn-default">+</button>
                 </form>
-            </td>
+                </td>
+            }
           
         </tr>
 }

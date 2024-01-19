@@ -6,9 +6,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Shops
 {
+    [Authorize(Roles = "User", Policy = "DisableAdminRole")]
     public class SummaryModel : PageModel
     {
         private readonly ShopDbContext _context;
@@ -21,8 +24,33 @@ namespace DotNetLab12.Pages.Shops
 
         public IList<BasketItem> BasketItems { get; set; }
 
+        [BindProperty]
+        public string Address { get; set; }
+        [BindProperty]
+        public string Name { get; set; }
+        [BindProperty]
+        public PaymentMethod PaymentMethod { get; set; }
+
+        public IActionResult OnPost()
+        {
+            AddCookieValue("Address", Address);
+            AddCookieValue("Name", Name);
+            AddCookieValue("PaymentMethod", PaymentMethod.ToString());
+            return RedirectToPage("PaymentConfirmation");
+        }
+
+        public void AddCookieValue(string name, string value, int numberOfDays = 7)
+        {
+
+            CookieOptions option = new CookieOptions();
+            option.Expires = DateTime.Now.AddDays(numberOfDays);
+            Response.Cookies.Append(name,value, option);
+          
+        }
+
         public async Task<IActionResult> OnGetAsync()
         {
+            ViewData["PaymentMethod"] = PaymentMethod.GetValues<PaymentMethod>();
             BasketItems = await getBasketItems();
 
             if (BasketItems.Count == 0)

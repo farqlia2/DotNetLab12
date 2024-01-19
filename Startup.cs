@@ -1,7 +1,10 @@
+using DotNetLab12.Areas.Identity;
 using DotNetLab12.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -38,10 +41,24 @@ namespace DotNetLab12
                 options.LowercaseQueryStrings = true;
                 options.AppendTrailingSlash = true;
             });
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ShopDbContext>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DisableAdminRole", policy =>
+                    policy.Requirements.Add(new NonAdminRequirement()));
+            });
+
+            services.AddSingleton<IAuthorizationHandler, NonAdminRequirementHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -59,7 +76,11 @@ namespace DotNetLab12
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
+
+            MyIdentityDataInitializer.SeedData(userManager, roleManager);
 
             app.UseEndpoints(endpoints =>
             {
@@ -67,9 +88,10 @@ namespace DotNetLab12
             });
 
             var cultureInfo = new CultureInfo("en-US");
-            // cultureInfo.NumberFormat.CurrencySymbol = "$";
+            cultureInfo.NumberFormat.CurrencySymbol = "$";
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
         }
     }
 }

@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using DotNetLab12.Data;
 using DotNetLab12.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Categories
 {
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly DotNetLab12.Data.ShopDbContext _context;

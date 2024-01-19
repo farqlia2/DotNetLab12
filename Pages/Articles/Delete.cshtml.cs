@@ -9,9 +9,11 @@ using DotNetLab12.Data;
 using DotNetLab12.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Articles
 {
+    [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
         private readonly DotNetLab12.Data.ShopDbContext _context;
