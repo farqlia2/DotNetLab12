@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace DotNetLab12.Pages.Categories
 {
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")]
     public class IndexModel : PageModel
     {
         private readonly DotNetLab12.Data.ShopDbContext _context;

@@ -29,31 +29,32 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Article) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-         
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
-            </td>
-            <td>
-            @if (User.IsInRole("Admin"))
-            {
-               <a asp-page="./Edit" asp-route-id="@item.ArticleId">Edit</a>
-             }
+        @foreach (var item in Model.Article)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
 
-            <a asp-page="./Details" asp-route-id="@item.ArticleId">Details</a>
-            <a asp-page="./Delete" asp-route-id="@item.ArticleId">Delete</a>
-            </td>
-        </tr>
-}
+                <td>
+                    @Html.DisplayFor(modelItem => item.Category.Name)
+                </td>
+                <td>
+                    <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
+                </td>
+                <td>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-page="./Edit" asp-route-id="@item.ArticleId">Edit</a>
+                    }
+
+                    <a asp-page="./Details" asp-route-id="@item.ArticleId">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@item.ArticleId">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
