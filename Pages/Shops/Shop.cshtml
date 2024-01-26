@@ -39,32 +39,87 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model.Article) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Category.Name)
-            </td>
-            <td>
-                <img src="~/upload/@Url.Content(item.PictureName)" alt="Image" style="height:50px;width:50px;" />
-            </td>
+    <tbody id="table_body" onload="jsNext()">
 
-            @if (!User.IsInRole("Admin"))
-            {
-                <td>
-                <form asp-page-handler="AddToBasket" asp-route-id="@item.ArticleId" method="post">
-                    <button class="btn btn-default">+</button>
-                </form>
-                </td>
-            }
-          
-        </tr>
-}
     </tbody>
+@section Foot{
+        <div>
+            <button onclick="jsPrev()"> Previous </button> |
+            <button onclick="jsNext()"> Next </button>
+        </div>
+}
+
+@section Scripts{ 
+    <script>
+
+        var skip = 0;
+        var take = 5;
+        var prevLength = 0;
+
+        function LoadELements(direction, suffix) {
+            const xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                if (this.status == 200) {
+                    try {
+
+                        console.log(this.response);
+
+                        const articles = this.response;
+
+                        prevLength = articles.length;
+                        console.log(prevLength);
+
+                        const tbody = document.getElementById("table_body");
+
+                        if (direction == "next") {
+                            skip += take;
+                        } else {
+                            skip = Math.max(skip - prevLength, 0);
+                        }
+                        
+
+                        while (tbody.firstChild) {
+                                tbody.removeChild(tbody.firstChild);
+                        }
+
+                        for (const art of articles) {
+                            const row = document.createElement("tr")
+                            console.log(`${art.Name}`);
+                            row.insertCell(-1).innerHTML = art.name;
+                            row.insertCell(-1).innerHTML = art.price;
+                            row.insertCell(-1).innerHTML = art.pictureName;
+                            row.insertCell(-1).innerHTML = art.category;
+                            tbody.append(row)
+                        }
+                       
+                        // document.getElementById("picture").src = "~/upload/@Url.Content(" + article.PictureName + ")";
+
+                    } catch (e) {
+                        console.log(e)
+                        console.warn('There was an error in JSON. Could not parse.')
+                    }
+                } else if (this.status == 204) {
+                    window.alert("No " + direction + " element");
+                } else {
+                    console.warn("Received " + this.status + " in response code.");
+                }
+            };
+            let id = document.getElementById("id");
+            let get_request = "/api/articles/skip/" + skip + "/" + take;
+            xhr.open("get", get_request)
+            xhr.responseType = 'json';
+            xhr.send();
+        }
+
+        function jsPrev() {
+            LoadELements("previous");
+        }
+
+        function jsNext() {
+            LoadELements("next");
+        }
+
+    </script>
+}
+
 </table>

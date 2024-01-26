@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -30,6 +31,20 @@ namespace DotNetLab12
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.AllowAnyOrigin()  // from any origin, but only GET
+                        .AllowAnyHeader()       // to be sure
+                        .AllowAnyMethod();      // for any method: POST, DELETE etc.
+                    });
+            });
+
+            services.AddRazorPages();
+            services.AddControllersWithViews();
            
             services.AddDbContextPool<ShopDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("MyDb")));
@@ -68,6 +83,8 @@ namespace DotNetLab12
 
             app.UseRouting();
 
+            app.UseCors();
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -77,6 +94,8 @@ namespace DotNetLab12
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
+                endpoints.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllers();
             });
 
             var cultureInfo = new CultureInfo("en-US");
