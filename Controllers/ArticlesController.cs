@@ -81,7 +81,7 @@ namespace DotNetLab12.Controllers
         // POST: api/Articles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        // [Authorize(Roles = "Admin")]
         public async Task<ActionResult<Article>> PostArticle(Article article)
         {
             _context.Article.Add(article);
